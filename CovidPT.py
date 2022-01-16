@@ -377,7 +377,7 @@ etario = etario.set_index('faixaetaria')
 
 add_selectbox = st.sidebar.selectbox(
     "How would you like to be contacted?",
-    ("Quadro Geral", "Informação ARS,
+    ("Quadro Geral", "Informação ARS",
      'Comparação entre diferentes datas', 'Comparação por faixa etária'", "Gráficos")
 )
 
