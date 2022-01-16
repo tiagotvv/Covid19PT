@@ -167,7 +167,7 @@ testes['positividade_mm14d'] = 100*(testes['confirmados_novos'].rolling(window=1
 
 ## PROCESSAMENTO FAIXAS ETARIAS
 
-populacao_portugal = pd.read_csv('populacao_portugal.csv')
+populacao_portugal = pd.read_csv('./populacao_portugal.csv')
 total_populacao = populacao_portugal.sum(axis=1).values
 
 populacao_portugal['0_9'] = populacao_portugal['0_9m'] + populacao_portugal['0_9f']
