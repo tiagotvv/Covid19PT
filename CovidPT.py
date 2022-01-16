@@ -427,8 +427,6 @@ if add_selectbox == "Quadro Geral":
     col4.metric('Positividade:', str("{:,.2f}".format(testes['positividade_mm7d'][-1]))+"%", \
                 str("{:,.2f}".format(testes['positividade_mm7d'].diff()[-1])))
     st.caption('Os valores referentes a testagem são a média móvel de 7 dias')
-    st.caption('Fonte dos dados: Data Science for Social Good Portugal - ' + 'https://github.com/dssg-pt/covid19pt-data')
-    st.caption('Autor: Tiago T. V. Vinhoza' + 'https://twitter.com/tiagotvv')
 
 if add_selectbox == "Informação ARS":
     st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
