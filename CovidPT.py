@@ -10,13 +10,12 @@ st.header('COVID-19 Dashboard Portugal')
 CASOS_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv')
 TESTES_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/amostras.csv')
 VAXX_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/vacinas_detalhe.csv')
-@st.cache
+@st.cache    
 def load_data(a):
     case_info = pd.read_csv(CASOS_URL)
     test_info= pd.read_csv(TESTES_URL)
     vaxx_info = pd.read_csv(VAXX_URL)
     return case_info, test_info, vaxx_info
-
 
 a=0
 if 'df_portugal' in locals():
@@ -165,6 +164,208 @@ testes['confirmados_novos_mm7d'] = testes['confirmados_novos'].rolling(window=7)
 testes['positividade_mm7d'] = 100*(testes['confirmados_novos'].rolling(window=7).sum())/(testes['amostras_novas'].rolling(window=7).sum())
 testes['positividade_mm14d'] = 100*(testes['confirmados_novos'].rolling(window=14).sum())/(testes['amostras_novas'].rolling(window=14).sum())
 
+
+## PROCESSAMENTO FAIXAS ETARIAS
+
+populacao_portugal = pd.read_csv('populacao_portugal.csv')
+total_populacao = populacao_portugal.sum(axis=1).values
+
+populacao_portugal['0_9'] = populacao_portugal['0_9m'] + populacao_portugal['0_9f']
+populacao_portugal['10_19'] = populacao_portugal['10_19m'] + populacao_portugal['10_19f']
+populacao_portugal['20_29'] = populacao_portugal['20_29m'] + populacao_portugal['20_29f'] 
+populacao_portugal['30_39'] = populacao_portugal['30_39m'] + populacao_portugal['30_39f'] 
+populacao_portugal['40_49'] = populacao_portugal['40_49m'] + populacao_portugal['40_49f'] 
+populacao_portugal['50_59'] = populacao_portugal['50_59m'] + populacao_portugal['50_59f'] 
+populacao_portugal['60_69'] = populacao_portugal['60_69m'] + populacao_portugal['60_69f'] 
+populacao_portugal['70_79'] = populacao_portugal['70_79m'] + populacao_portugal['70_79f'] 
+populacao_portugal['80_plus'] = populacao_portugal['80_plus_m'] + populacao_portugal['80_plus_f'] 
+
+populacao_portugal['less_80'] = populacao_portugal['0_9']+populacao_portugal['10_19']+ \
+                                populacao_portugal['20_29'] +populacao_portugal['30_39'] + \
+                                populacao_portugal['40_49'] +populacao_portugal['50_59'] + \
+                                populacao_portugal['60_69']+populacao_portugal['70_79'] 
+populacao_portugal['70_plus'] = populacao_portugal['70_79'] + populacao_portugal['80_plus']
+populacao_portugal['less_70'] = populacao_portugal['0_9']+populacao_portugal['10_19']+ \
+                                populacao_portugal['20_29'] +populacao_portugal['30_39'] + \
+                                populacao_portugal['40_49'] +populacao_portugal['50_59'] + \
+                                populacao_portugal['60_69'] 
+populacao_portugal['60_plus'] = populacao_portugal['60_69'] + populacao_portugal['70_79'] + populacao_portugal['80_plus']
+
+populacao_portugal['less_60'] = populacao_portugal['0_9']+populacao_portugal['10_19']+ \
+                                populacao_portugal['20_29'] +populacao_portugal['30_39'] + \
+                                populacao_portugal['40_49'] +populacao_portugal['50_59']
+populacao_portugal['50_plus'] = populacao_portugal['50_59'] + populacao_portugal['60_69'] + \
+                                populacao_portugal['70_79'] + populacao_portugal['80_plus']
+populacao_portugal['less_50'] = populacao_portugal['0_9']+populacao_portugal['10_19']+ \
+                                populacao_portugal['20_29'] +populacao_portugal['30_39'] + \
+                                populacao_portugal['40_49']
+populacao_portugal['40_plus'] = populacao_portugal['40_49']+populacao_portugal['50_59'] + populacao_portugal['60_69'] + \
+                                populacao_portugal['70_79'] + populacao_portugal['80_plus']
+populacao_portugal['less_40'] = populacao_portugal['0_9']+populacao_portugal['10_19']+ \
+                                populacao_portugal['20_29'] +populacao_portugal['30_39']
+
+populacao_portugal['50_79'] = populacao_portugal['50_plus']-populacao_portugal['80_plus']
+populacao_portugal['40_79'] = populacao_portugal['40_plus']-populacao_portugal['80_plus']
+populacao_portugal['40_59'] = populacao_portugal['40_plus']-populacao_portugal['60_plus']
+populacao_portugal['60_79'] = populacao_portugal['60_plus']-populacao_portugal['80_plus']
+
+ddd=14
+mortes_80_plus = df_portugal_all[['obitos_80_plus_m', 'obitos_80_plus_f']].diff().sum(axis=1)
+
+mortes_50_79 = df_portugal_all[['obitos_50_59_m', 'obitos_50_59_f',
+                                  'obitos_60_69_m', 'obitos_60_69_f',
+                                  'obitos_70_79_m', 'obitos_70_79_f']].diff().sum(axis=1)
+
+mortes_10_49 = df_portugal_all[['obitos_10_19_m', 'obitos_10_19_f',
+                                  'obitos_20_29_m', 'obitos_20_29_f',
+                                  'obitos_30_39_m', 'obitos_30_39_f',
+                                  'obitos_40_49_m', 'obitos_40_49_f']].diff().sum(axis=1)
+
+mortes_80_plus = df_portugal_all[['obitos_80_plus_m', 'obitos_80_plus_f']].diff().sum(axis=1)
+
+mortes_50_59 = df_portugal_all[['obitos_50_59_m', 'obitos_50_59_f']].diff().sum(axis=1)
+mortes_60_69 = df_portugal_all[['obitos_60_69_m', 'obitos_60_69_f']].diff().sum(axis=1)
+mortes_70_79 = df_portugal_all[['obitos_70_79_m', 'obitos_70_79_f']].diff().sum(axis=1)
+
+mortes_0_9 = df_portugal_all[['obitos_0_9_m', 'obitos_0_9_f']].diff().sum(axis=1)
+mortes_10_19 = df_portugal_all[['obitos_10_19_m', 'obitos_10_19_f']].diff().sum(axis=1)
+mortes_20_29 = df_portugal_all[['obitos_20_29_m', 'obitos_20_29_f']].diff().sum(axis=1)
+mortes_30_39 = df_portugal_all[['obitos_30_39_m', 'obitos_30_39_f']].diff().sum(axis=1)
+mortes_40_49 = df_portugal_all[['obitos_40_49_m', 'obitos_40_49_f']].diff().sum(axis=1)
+                               
+mortes = pd.DataFrame()
+mortes['0_9'] = mortes_0_9
+mortes['10_19'] = mortes_10_19
+mortes['20_29'] = mortes_20_29
+mortes['30_39'] = mortes_30_39
+mortes['40_49'] = mortes_40_49
+mortes['40_59'] = mortes_40_49 + mortes_50_59
+mortes['40_79'] = mortes_40_49 + mortes_50_59+mortes_60_69+mortes_70_79
+
+mortes['50_59'] = mortes_50_59
+mortes['60_69'] = mortes_60_69
+mortes['70_79'] = mortes_70_79
+mortes['60_79'] = mortes_60_69+mortes_70_79
+mortes['50_79'] = mortes_50_59+mortes_60_69+mortes_70_79
+mortes['80_plus'] = mortes_80_plus
+mortes['less_80'] = mortes_0_9 + mortes_10_19 + mortes_20_29 + mortes_30_39 + mortes_40_49 + mortes_50_59 + mortes_60_69 + mortes_70_79
+mortes['70_plus'] = mortes_70_79 + mortes_80_plus
+mortes['less_70'] = mortes_0_9 + mortes_10_19 + mortes_20_29 + mortes_30_39 + mortes_40_49 + mortes_50_59 + mortes_60_69
+mortes['60_plus'] = mortes_60_69 +  mortes_70_79 + mortes_80_plus 
+mortes['less_60'] = mortes_0_9 + mortes_10_19 + mortes_20_29 + mortes_30_39 + mortes_40_49 + mortes_50_59 
+mortes['50_plus'] = mortes_50_59 + mortes_60_69 +  mortes_70_79 + mortes_80_plus 
+mortes['less_50'] = mortes_0_9 + mortes_10_19 + mortes_20_29 + mortes_30_39 + mortes_40_49 
+mortes['40_plus'] = mortes_40_49 + mortes_50_59 + mortes_60_69 +  mortes_70_79 + mortes_80_plus 
+mortes['less_40'] = mortes_0_9 + mortes_10_19 + mortes_20_29 + mortes_30_39
+mortes = mortes.rolling(window=ddd).sum().dropna().astype(int)
+mortes['total'] = mortes['less_40']+mortes['40_plus']
+
+casos_0_9	=	df_portugal_all[['confirmados_0_9_m','confirmados_0_9_f']].diff().sum(axis=1)
+casos_10_19	=	df_portugal_all[['confirmados_10_19_m','confirmados_10_19_f']].diff().sum(axis=1)
+casos_20_29	=	df_portugal_all[['confirmados_20_29_m','confirmados_20_29_f']].diff().sum(axis=1)
+casos_30_39	=	df_portugal_all[['confirmados_30_39_m','confirmados_30_39_f']].diff().sum(axis=1)
+casos_40_49	=	df_portugal_all[['confirmados_40_49_m','confirmados_40_49_f']].diff().sum(axis=1)
+casos_50_59	=	df_portugal_all[['confirmados_50_59_m','confirmados_50_59_f']].diff().sum(axis=1)
+casos_60_69	=	df_portugal_all[['confirmados_60_69_m','confirmados_60_69_f']].diff().sum(axis=1)
+casos_70_79	=	df_portugal_all[['confirmados_70_79_m','confirmados_70_79_f']].diff().sum(axis=1)
+casos_80_plus	=	df_portugal_all[['confirmados_80_plus_m','confirmados_80_plus_f']].diff().sum(axis=1)
+
+casos_40_59 = casos_40_49+casos_50_59
+casos_40_79 = casos_40_49+casos_50_59+casos_60_69+casos_70_79
+casos_50_79 = casos_50_59+casos_60_69+casos_70_79
+casos_60_79 = casos_60_69+casos_70_79
+
+casos=pd.DataFrame()	
+casos['0_9']	=	casos_0_9	
+casos['10_19']	=	casos_10_19	
+casos['20_29']	=	casos_20_29	
+casos['30_39']	=	casos_30_39	
+casos['40_49']	=	casos_40_49	
+casos['40_59']	=	casos_40_59	
+casos['40_79']	=	casos_40_79	
+
+casos['50_59']	=	casos_50_59	
+casos['60_79']	=	casos_60_79	
+casos['60_69']	=	casos_60_69	
+casos['50_79']	=	casos_50_79	
+casos['70_79']	=	casos_70_79	
+casos['80_plus']	=	casos_80_plus	
+casos['less_80'] = casos_0_9 + casos_10_19 + casos_20_29 + casos_30_39 + casos_40_49 + casos_50_59 + casos_60_69 + casos_70_79
+casos['70_plus'] = casos_70_79 + casos_80_plus
+casos['less_70'] = casos_0_9 + casos_10_19 + casos_20_29 + casos_30_39 + casos_40_49 + casos_50_59 + casos_60_69
+casos['60_plus'] = casos_60_69 +  casos_70_79 + casos_80_plus 
+casos['less_60'] = casos_0_9 + casos_10_19 + casos_20_29 + casos_30_39 + casos_40_49 + casos_50_59 
+casos['50_plus'] = casos_50_59 + casos_60_69 +  casos_70_79 + casos_80_plus 
+casos['less_50'] = casos_0_9 + casos_10_19 + casos_20_29 + casos_30_39 + casos_40_49 
+casos['40_plus'] = casos_40_49 + casos_50_59 + casos_60_69 +  casos_70_79 + casos_80_plus 
+casos['less_40'] = casos_0_9 + casos_10_19 + casos_20_29 + casos_30_39
+
+casos	=	casos.rolling(window=ddd).sum().dropna().astype(int)	
+casos['total'] = casos['less_40']+casos['40_plus']
+
+incidencia_mortes = pd.DataFrame()
+
+incidencia_mortes['0_9'] = 100000*mortes['0_9']/(populacao_portugal['0_9'].values)
+incidencia_mortes['10_19'] = 100000*mortes['10_19']/(populacao_portugal['10_19'].values)
+incidencia_mortes['20_29'] = 100000*mortes['20_29']/(populacao_portugal['20_29'].values)
+incidencia_mortes['30_39'] = 100000*mortes['30_39']/(populacao_portugal['30_39'].values)
+incidencia_mortes['40_49'] = 100000*mortes['40_49']/(populacao_portugal['40_49'].values)
+incidencia_mortes['40_59'] = 100000*mortes['40_59']/(populacao_portugal['40_59'].values)
+incidencia_mortes['40_79'] = 100000*mortes['40_79']/(populacao_portugal['40_79'].values)
+incidencia_mortes['50_59'] = 100000*mortes['50_59']/(populacao_portugal['50_59'].values)
+incidencia_mortes['60_69'] = 100000*mortes['60_69']/(populacao_portugal['60_69'].values)
+incidencia_mortes['70_79'] = 100000*mortes['70_79']/(populacao_portugal['70_79'].values)
+incidencia_mortes['50_79'] = 100000*mortes['50_79']/(populacao_portugal['50_79'].values)
+incidencia_mortes['60_79'] = 100000*mortes['60_79']/(populacao_portugal['60_79'].values)
+incidencia_mortes['80_plus'] = 100000*mortes['80_plus']/(populacao_portugal['80_plus'].values)
+incidencia_mortes['less_80'] = 100000*mortes['less_80']/(populacao_portugal['less_80'].values)
+incidencia_mortes['70_plus'] = 100000*mortes['70_plus']/(populacao_portugal['70_plus'].values)
+incidencia_mortes['less_70'] = 100000*mortes['less_70']/(populacao_portugal['less_70'].values)
+incidencia_mortes['60_plus'] = 100000*mortes['60_plus']/(populacao_portugal['60_plus'].values)
+incidencia_mortes['less_60'] = 100000*mortes['less_60']/(populacao_portugal['less_60'].values)
+incidencia_mortes['50_plus'] = 100000*mortes['50_plus']/(populacao_portugal['50_plus'].values)
+incidencia_mortes['less_50'] = 100000*mortes['less_50']/(populacao_portugal['less_50'].values)
+incidencia_mortes['40_plus'] = 100000*mortes['40_plus']/(populacao_portugal['40_plus'].values)
+incidencia_mortes['less_40'] = 100000*mortes['less_40']/(populacao_portugal['less_40'].values)
+incidencia_mortes['total']	=	1000*(mortes['total']/(populacao_pt))
+
+
+incidencia_casos	=	pd.DataFrame()
+incidencia_casos['0_9']	=	100000*(casos['0_9']/(populacao_portugal['0_9'].values))
+incidencia_casos['10_19']	=	100000*(casos['10_19']/(populacao_portugal['10_19'].values))
+incidencia_casos['20_29']	=	100000*(casos['20_29']/(populacao_portugal['20_29'].values))
+incidencia_casos['30_39']	=	100000*(casos['30_39']/(populacao_portugal['30_39'].values))
+incidencia_casos['40_49']	=	100000*(casos['40_49']/(populacao_portugal['40_49'].values))
+incidencia_casos['50_59']	=	100000*(casos['50_59']/(populacao_portugal['50_59'].values))
+incidencia_casos['60_69']	=	100000*(casos['60_69']/(populacao_portugal['60_69'].values))
+incidencia_casos['70_79']	=	100000*(casos['70_79']/(populacao_portugal['70_79'].values))
+incidencia_casos['40_79']	=	100000*(casos['40_79']/(populacao_portugal['40_79'].values))
+incidencia_casos['40_59']	=	100000*(casos['40_59']/(populacao_portugal['40_59'].values))
+incidencia_casos['50_79']	=	100000*(casos['50_79']/(populacao_portugal['50_79'].values))
+incidencia_casos['60_79']	=	100000*(casos['60_79']/(populacao_portugal['60_79'].values))
+incidencia_casos['80_plus']	=	100000*(casos['80_plus']/(populacao_portugal['80_plus'].values))
+incidencia_casos['less_80']	=	100000*(casos['less_80']/(populacao_portugal['less_80'].values))
+incidencia_casos['70_plus']	=	100000*(casos['70_plus']/(populacao_portugal['70_plus'].values))
+incidencia_casos['less_70']	=	100000*(casos['less_70']/(populacao_portugal['less_70'].values))
+
+incidencia_casos['60_plus']	=	100000*(casos['60_plus']/(populacao_portugal['60_plus'].values))
+incidencia_casos['less_60']	=	100000*(casos['less_60']/(populacao_portugal['less_60'].values))
+
+incidencia_casos['50_plus']	=	100000*(casos['50_plus']/(populacao_portugal['50_plus'].values))
+incidencia_casos['less_50']	=	100000*(casos['less_50']/(populacao_portugal['less_50'].values))
+incidencia_casos['40_plus']	=	100000*(casos['40_plus']/(populacao_portugal['40_plus'].values))
+incidencia_casos['less_40']	=	100000*(casos['less_40']/(populacao_portugal['less_40'].values))
+incidencia_casos['total']	=	1000*(casos['total']/(populacao_pt))
+
+etario = pd.DataFrame()
+etario['casos'] = pd.DataFrame([casos_0_9, casos_10_19, casos_20_29, casos_30_39, casos_40_49, casos_50_59, casos_60_69, casos_70_79, casos_80_plus]).cumsum(axis=1).loc[:,datetime.date.today().strftime('%Y/%m/%d')].astype(int)
+etario['óbitos'] = pd.DataFrame([mortes_0_9, mortes_10_19,mortes_20_29, mortes_30_39, mortes_40_49, mortes_50_59,mortes_60_69, mortes_70_79,mortes_80_plus]).cumsum(axis=1).loc[:,datetime.date.today().strftime('%Y/%m/%d')].astype(int)
+
+etario['CFR'] = etario['óbitos']/etario['casos']
+etario['faixaetaria'] = ['0-9','10-19','20-29','30-39','40-49','50-59','60-69','70-79','mais de 80']
+etario = etario.set_index('faixaetaria')
+
+
 #fig, ax = plt.subplots()
 #df_portugal_all[['confirmados']].diff().rolling(window=7).mean().plot(figsize=(18,10), fig=fig, ax=ax, linewidth=3)
 #plt.grid(linewidth=0.1)
@@ -176,7 +377,8 @@ testes['positividade_mm14d'] = 100*(testes['confirmados_novos'].rolling(window=1
 
 add_selectbox = st.sidebar.selectbox(
     "How would you like to be contacted?",
-    ("Quadro Geral", "Informação ARS", "Gráficos", 'Comparação entre diferentes datas')
+    ("Quadro Geral", "Informação ARS,
+     'Comparação entre diferentes datas', 'Comparação por faixa etária'", "Gráficos")
 )
 
 if add_selectbox == "Quadro Geral":
@@ -249,64 +451,12 @@ if add_selectbox == "Informação ARS":
     st.caption('Taxas de incidência por 100 mil habitantes')
    
 
-
-
-if add_selectbox == "Gráficos":
-
-    st.subheader("Hospitalizações vs Incidência a 14 dias")
-
-
-    st.vega_lite_chart(df_portugal_all, {
-     'width': 800,
-     'height': 500,
-     #'xlabel':'Internados',
-     'mark': {'type': 'circle', 'tooltip': True},
-     'encoding': {
-         'x': {'field': 'incidencia_14d', "format": ".1f",'type': 'quantitative', 'title': 'Incidência 14 dias (por 100 mil hab)'},
-         'y': {'field': 'internados', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados'},
-         #'size': {'field': 'c', 'type': 'quantitative'},
-         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
-     },
- })
-
-    st.subheader("Hospitalizações UCI vs Incidência a 14 dias")
-
-    st.vega_lite_chart(df_portugal_all, {
-     'width': 800,
-     'height': 500,
-     #'xlabel':'Internados',
-     'mark': {'type': 'circle', 'tooltip': True},
-     'encoding': {
-         'x': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 
-        "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias (por 100 mil hab)'},
-         'y': {'field': 'internados_uci', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados em UCI'},
-         #'size': {'field': 'c', 'type': 'quantitative'},
-         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
-     },
- })
-
-    st.subheader("Positividade 14 dias vs Incidência a 14 dias")
-
-    st.vega_lite_chart(testes, {
-     'width': 800,
-     'height': 500,
-     #'xlabel':'Internados',
-     'mark': {'type': 'circle', 'tooltip': True},
-     'encoding': {
-         'x': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 
-        "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias (por 100 mil hab)'},
-         'y': {'field': 'positividade_mm14d', "format": ".1f", 'type': 'quantitative', 'title': 'Positividade 14 dias'},
-         #'size': {'field': 'c', 'type': 'quantitative'},
-         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
-     },
- })
-
 if add_selectbox == "Comparação entre diferentes datas":
 
     col1, col2 = st.columns(2)
     d1 = col1.date_input(
      "Escolha a primeira data",
-     datetime.date.today()+datetime.timedelta(days=-1), 
+     datetime.date.today(), 
      min_value=datetime.date(2020,3,16),
      max_value=df_portugal_all.index[-1])
 
@@ -362,6 +512,166 @@ if add_selectbox == "Comparação entre diferentes datas":
                 "")
         col2.metric('Positividade (média 7d)',  str("{:,.2f}".format(testes.loc[d2,'positividade_mm7d'])+'%'), \
                 "")
+
+if add_selectbox == "Comparação por faixa etária":
+    st.subheader('Comparação por Faixa Etária - incidências a 14 dias')
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.subheader('**Mais de 80**')
+    col1.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['80_plus'][-1])), \
+                 str("{:,.1f}".format(incidencia_casos['80_plus'].diff()[-1])))
+    col1.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['80_plus'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['80_plus'].diff()[-1])))
+
+
+    col2.subheader('**60-79**')
+    col2.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['60_79'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['60_79'].diff()[-1])))
+    
+    col2.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['60_79'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['60_79'].diff()[-1])))
+    
+    with col2.expander("Desdobrar"):
+        st.subheader('**70-79**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['70_79'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['70_79'].diff()[-1]))) 
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['70_79'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['70_79'].diff()[-1])))
+
+        st.subheader('**60-69**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['60_69'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['60_69'].diff()[-1])))
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['60_69'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['60_69'].diff()[-1])))
+        
+
+    col3.subheader('**40-59**')
+    col3.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['40_59'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['40_59'].diff()[-1])))
+
+    col3.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['40_59'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['40_59'].diff()[-1])))
+
+    with col3.expander("Desdobrar"):
+        st.subheader('**50-59**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['50_59'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['50_59'].diff()[-1])))
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['50_59'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['50_59'].diff()[-1])))
+
+        st.subheader('**40-49**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['40_49'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['40_49'].diff()[-1])))
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['40_49'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['40_49'].diff()[-1])))
+
+        
+    col4.subheader('**Menos de 40**')
+    col4.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['less_40'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['less_40'].diff()[-1])))
+    col4.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['less_40'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['less_40'].diff()[-1])))
+
+    with col4.expander("Desdobrar"):
+        st.subheader('**30-39**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['30_39'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['30_39'].diff()[-1])))
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['30_39'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['30_39'].diff()[-1])))
+
+        st.subheader('**20-29**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['20_29'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['20_29'].diff()[-1])))
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['20_29'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['20_29'].diff()[-1])))
+
+        st.subheader('**10-19**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['10_19'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['10_19'].diff()[-1])))
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['10_19'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['10_19'].diff()[-1])))
+
+        st.subheader('**0-9**')
+        st.metric('Casos: incidencia',  str("{:,.1f}".format(incidencia_casos['0_9'][-1])), \
+                str("{:,.1f}".format(incidencia_casos['0_9'].diff()[-1])))
+        st.metric('Óbitos: incidencia',  str("{:,.1f}".format(incidencia_mortes['0_9'][-1])), \
+                str("{:,.1f}".format(incidencia_mortes['0_9'].diff()[-1])))
+    
+
+    st.subheader('Comparação por Faixa Etária - números totais')
+
+    st.table(etario.style.format({'casos':'{:,.0f}','óbitos':'{:,.0f}','CFR':'{:,.4%}'}))
+
+
+
+
+
+if add_selectbox == "Gráficos":
+
+    st.subheader("Hospitalizações vs Incidência a 14 dias")
+
+
+    st.vega_lite_chart(df_portugal_all, {
+     'width': 800,
+     'height': 500,
+     #'xlabel':'Internados',
+     'mark': {'type': 'circle', 'tooltip': True},
+     'encoding': {
+         'x': {'field': 'incidencia_14d', "format": ".1f",'type': 'quantitative', 'title': 'Incidência 14 dias (por 100 mil hab)'},
+         'y': {'field': 'internados', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados'},
+         #'size': {'field': 'c', 'type': 'quantitative'},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+     },
+ })
+
+    st.subheader("Hospitalizações UCI vs Incidência a 14 dias")
+
+    st.vega_lite_chart(df_portugal_all, {
+     'width': 800,
+     'height': 500,
+     #'xlabel':'Internados',
+     'mark': {'type': 'circle', 'tooltip': True},
+     'encoding': {
+         'x': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 
+        "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias (por 100 mil hab)'},
+         'y': {'field': 'internados_uci', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados em UCI'},
+         #'size': {'field': 'c', 'type': 'quantitative'},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+     },
+ })
+
+    st.subheader("Positividade 14 dias vs Incidência a 14 dias")
+
+    st.vega_lite_chart(testes, {
+     'width': 800,
+     'height': 500,
+     #'xlabel':'Internados',
+     'mark': {'type': 'circle', 'tooltip': True},
+     'encoding': {
+         'x': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 
+        "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias (por 100 mil hab)'},
+         'y': {'field': 'positividade_mm14d', "format": ".1f", 'type': 'quantitative', 'title': 'Positividade 14 dias'},
+         #'size': {'field': 'c', 'type': 'quantitative'},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+     },
+ })
+
+    st.subheader("Matriz de Risco (últimos 90 dias)")
+
+    st.vega_lite_chart(df_portugal_all.tail(90), {
+     'width': 800,
+     'height': 500,
+     #'xlabel':'Internados',
+     'mark': {'type': 'circle', 'tooltip': True},
+     'encoding': {
+         'x': {'field': 'Rt_smooth', "format": ".2f", 'type': 'quantitative', 
+        "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Rt estimado'},
+         'y': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 'title': 'Incidência 14 dias'},
+         #'size': {'field': 'c', 'type': 'quantitative'},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+     },
+ })
+
 
 
 
