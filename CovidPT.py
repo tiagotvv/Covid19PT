@@ -378,7 +378,7 @@ etario = etario.set_index('faixaetaria')
 add_selectbox = st.sidebar.selectbox(
     "How would you like to be contacted?",
     ("Quadro Geral", "Informação ARS",
-     'Comparação entre diferentes datas', 'Comparação por faixa etária'", "Gráficos")
+     'Comparação entre diferentes datas', 'Comparação por faixa etária', "Gráficos")
 )
 
 if add_selectbox == "Quadro Geral":
@@ -428,6 +428,7 @@ if add_selectbox == "Quadro Geral":
                 str("{:,.2f}".format(testes['positividade_mm7d'].diff()[-1])))
     st.caption('Os valores referentes a testagem são a média móvel de 7 dias')
     st.caption('Fonte dos dados: Data Science for Social Good Portugal - ' + 'https://github.com/dssg-pt/covid19pt-data')
+    st.caption('Autor: Tiago T. V. Vinhoza' + 'https://twitter.com/tiagotvv')
 
 if add_selectbox == "Informação ARS":
     st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
@@ -671,6 +672,9 @@ if add_selectbox == "Gráficos":
          'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
      },
  })
+
+st.caption('Fonte dos dados: Data Science for Social Good Portugal - ' + 'https://github.com/dssg-pt/covid19pt-data')
+st.caption('Autor: Tiago T. V. Vinhoza: ' + 'https://twitter.com/tiagotvv')
 
 
 
