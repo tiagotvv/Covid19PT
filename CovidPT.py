@@ -10,28 +10,18 @@ st.header('COVID-19 Dashboard Portugal')
 CASOS_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv')
 TESTES_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/amostras.csv')
 VAXX_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/vacinas_detalhe.csv')
-@st.cache    
+
 def load_data(a):
     case_info = pd.read_csv(CASOS_URL)
     test_info= pd.read_csv(TESTES_URL)
     vaxx_info = pd.read_csv(VAXX_URL)
     return case_info, test_info, vaxx_info
-a=0
+
 #df_portugal, amostras, vacinas_detalhe = load_data(a)
 
 data_load_state = st.text('Loading data...')
 df_portugal, amostras, vacinas_detalhe = load_data(a)
 data_load_state.text('Loading data... done!')
-
-if 'df_portugal' in locals():
-    if df_portugal.index[-1] != datetime.date.today():
-        a=1
-        df_portugal, amostras, vacinas_detalhe = load_data(a)
-        a=0
-    else:
-        a=0
-else:
-    a=0
 
 
 df_portugal_all = df_portugal.copy()
