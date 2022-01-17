@@ -16,19 +16,24 @@ def load_data(a):
     test_info= pd.read_csv(TESTES_URL)
     vaxx_info = pd.read_csv(VAXX_URL)
     return case_info, test_info, vaxx_info
-
 a=0
+#df_portugal, amostras, vacinas_detalhe = load_data(a)
+
+data_load_state = st.text('Loading data...')
+df_portugal, amostras, vacinas_detalhe = load_data(a)
+data_load_state.text('Loading data... done!')
+
 if 'df_portugal' in locals():
     if df_portugal.index[-1] != datetime.date.today():
         a=1
+        df_portugal, amostras, vacinas_detalhe = load_data(a)
+        a=0
     else:
         a=0
 else:
     a=0
 
-data_load_state = st.text('Loading data...')
-df_portugal, amostras, vacinas_detalhe = load_data(a)
-data_load_state.text('Loading data... done!')
+
 df_portugal_all = df_portugal.copy()
 testes = amostras.copy()
 df_portugal_all['data'] = pd.to_datetime(df_portugal_all['data'], format='%d-%m-%Y')
@@ -611,6 +616,10 @@ if add_selectbox == "Gráficos":
 
     st.subheader("Hospitalizações vs Incidência a 14 dias")
 
+    ticks_incidencia = []
+    for j in range(0,df_portugal_all['incidencia_14d'].dropna().astype(int).max(),500):
+        ticks_incidencia.append(j)
+
 
     st.vega_lite_chart(df_portugal_all, {
      'width': 800,
@@ -618,7 +627,9 @@ if add_selectbox == "Gráficos":
      #'xlabel':'Internados',
      'mark': {'type': 'circle', 'tooltip': True, 'size':60},
      'encoding': {
-         'x': {'field': 'incidencia_14d', "format": ".1f",'type': 'quantitative', 'title': 'Incidência 14 dias'},
+         'x': {'field': 'incidencia_14d', "format": ".1f",
+         "axis": {"labelAngle": 0,"values": ticks_incidencia, "labelOverlap": "parity"},
+         'type': 'quantitative', 'title': 'Incidência 14 dias'},
          'y': {'field': 'internados', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados'},
          #'size': {'field': 'c', 'type': 'quantitative'},
          'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
@@ -627,6 +638,11 @@ if add_selectbox == "Gráficos":
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
       {"field": "internados", "type": "quantitative", "title": "Hospitalizados",'format':',.0f'}]
      },
+       "selection": {
+    "grid": {
+      "type": "interval", "bind": "scales"
+    }
+  },
  })
 
     st.subheader("Hospitalizações UCI vs Incidência a 14 dias")
@@ -638,7 +654,7 @@ if add_selectbox == "Gráficos":
      'mark': {'type': 'circle', 'size':60},
      'encoding': {
          'x': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 
-        "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias'},
+        "axis": {"labelAngle": 0,"values": ticks_incidencia, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias'},
          'y': {'field': 'internados_uci', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados em UCI'},
          #'size': {'field': 'c', 'type': 'quantitative'},
          'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
@@ -647,6 +663,11 @@ if add_selectbox == "Gráficos":
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
       {"field": "internados_uci", "type": "quantitative", "title": "UCI",'format':',.0f'}]
      },
+       "selection": {
+    "grid": {
+      "type": "interval", "bind": "scales"
+    }
+  },
  })
 
     st.subheader("Positividade 14 dias vs Incidência a 14 dias")
@@ -658,7 +679,8 @@ if add_selectbox == "Gráficos":
      'mark': {'type': 'circle',  'size':60},
      'encoding': {
          'x': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 
-        "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias'},
+        "axis": {"labelAngle": 0,"values": ticks_incidencia, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias'},
+        
          'y': {'field': 'positividade_mm14d', "format": ".1f", 'type': 'quantitative', 'title': 'Positividade 14 dias'},
          #'size': {'field': 'c', 'type': 'quantitative'},
          'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
@@ -667,6 +689,11 @@ if add_selectbox == "Gráficos":
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
       {"field": "positividade_mm14d", "type": "quantitative", "title": "Positividade",'format':'.1f'}]
      },
+       "selection": {
+    "grid": {
+      "type": "interval", "bind": "scales"
+    }
+  },
  })
 
     st.subheader("Matriz de Risco (últimos 90 dias)")
@@ -686,8 +713,13 @@ if add_selectbox == "Gráficos":
       {"field": "month_year", "type": "temporal", "title": "Data"},
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
       {"field": "Rt_smooth", "type": "quantitative", "title": "Rt estimado",'format':'.2f'}
-    ]
+    ],
      },
+       "selection": {
+    "grid": {
+      "type": "interval", "bind": "scales"
+    }
+  },
  })
 
 
