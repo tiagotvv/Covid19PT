@@ -358,13 +358,14 @@ incidencia_casos['less_40']	=	100000*(casos['less_40']/(populacao_portugal['less
 incidencia_casos['total']	=	1000*(casos['total']/(populacao_pt))
 
 etario = pd.DataFrame()
-etario['casos'] = pd.DataFrame([casos_0_9, casos_10_19, casos_20_29, casos_30_39, casos_40_49, casos_50_59, casos_60_69, casos_70_79, casos_80_plus]).cumsum(axis=1).loc[:,datetime.date.today().strftime('%Y/%m/%d')].astype(int)
-etario['óbitos'] = pd.DataFrame([mortes_0_9, mortes_10_19,mortes_20_29, mortes_30_39, mortes_40_49, mortes_50_59,mortes_60_69, mortes_70_79,mortes_80_plus]).cumsum(axis=1).loc[:,datetime.date.today().strftime('%Y/%m/%d')].astype(int)
+tmp1 =  pd.DataFrame([casos_0_9, casos_10_19, casos_20_29, casos_30_39, casos_40_49, casos_50_59, casos_60_69, casos_70_79, casos_80_plus]).cumsum(axis=1)
+tmp2 = pd.DataFrame([mortes_0_9, mortes_10_19,mortes_20_29, mortes_30_39, mortes_40_49, mortes_50_59,mortes_60_69, mortes_70_79,mortes_80_plus]).cumsum(axis=1)
+etario['casos'] = tmp1.iloc[:,len(tmp1.columns)-1].astype(int)
+etario['óbitos'] = tmp2.iloc[:,len(tmp2.columns)-1].astype(int)
 
 etario['CFR'] = etario['óbitos']/etario['casos']
 etario['faixaetaria'] = ['0-9','10-19','20-29','30-39','40-49','50-59','60-69','70-79','mais de 80']
 etario = etario.set_index('faixaetaria')
-
 
 #fig, ax = plt.subplots()
 #df_portugal_all[['confirmados']].diff().rolling(window=7).mean().plot(figsize=(18,10), fig=fig, ax=ax, linewidth=3)
