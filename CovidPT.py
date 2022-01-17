@@ -11,7 +11,7 @@ CASOS_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/da
 TESTES_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/amostras.csv')
 VAXX_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/vacinas_detalhe.csv')
 
-def load_data(a):
+def load_data():
     case_info = pd.read_csv(CASOS_URL)
     test_info= pd.read_csv(TESTES_URL)
     vaxx_info = pd.read_csv(VAXX_URL)
@@ -20,7 +20,7 @@ def load_data(a):
 #df_portugal, amostras, vacinas_detalhe = load_data(a)
 
 data_load_state = st.text('Loading data...')
-df_portugal, amostras, vacinas_detalhe = load_data(a)
+df_portugal, amostras, vacinas_detalhe = load_data()
 data_load_state.text('Loading data... done!')
 
 
