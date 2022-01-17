@@ -519,6 +519,8 @@ if add_selectbox == "Comparação entre Datas":
                 "")
 
 if add_selectbox == "Comparação por Faixa Etária":
+    st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
+
     st.subheader('Comparação por Faixa Etária - incidências a 14 dias')
 
     col1, col2, col3, col4 = st.columns(4)
@@ -613,6 +615,8 @@ if add_selectbox == "Comparação por Faixa Etária":
 
 
 if add_selectbox == "Gráficos":
+    st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
+
 
     st.subheader("Hospitalizações vs Incidência a 14 dias")
 
