@@ -508,6 +508,53 @@ if add_selectbox == "Comparação entre Datas":
         col2.metric('Positividade (média 7d)',  str("{:,.2f}".format(testes.loc[d2,'positividade_mm7d'])+'%'), \
                 "")
 
+    with st.expander("Detalhes por faixa etária"):
+
+        st.subheader('Mais de 80')
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d1,'80_plus'])), \
+                    "")
+        col2.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d1,'80_plus'])), \
+                    "")
+        col3.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d2,'80_plus'])), \
+                    "")
+        col4.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d2,'80_plus'])), \
+                    "")
+
+        st.subheader('60-79')
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d1,'60_79'])), \
+                    "")
+        col2.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d1,'60_79'])), \
+                    "")
+        col3.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d2,'60_79'])), \
+                    "")
+        col4.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d2,'60_79'])), \
+                    "")
+        
+        st.subheader('40-59')
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d1,'40_59'])), \
+                    "")
+        col2.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d1,'40_59'])), \
+                    "")
+        col3.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d2,'40_59'])), \
+                    "")
+        col4.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d2,'40_59'])), \
+                    "")
+    
+    
+        st.subheader('Menos de 40')
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d1,'less_40'])), \
+                    "")
+        col2.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d1,'less_40'])), \
+                    "")
+        col3.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos.loc[d2,'less_40'])), \
+                    "")
+        col4.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes.loc[d2,'less_40'])), \
+                    "")
+
 if add_selectbox == "Comparação por Faixa Etária":
 
     absolute = st.checkbox('Mostrar valores absolutos em 14 dias')
