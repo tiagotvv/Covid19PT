@@ -509,90 +509,179 @@ if add_selectbox == "Comparação entre Datas":
                 "")
 
 if add_selectbox == "Comparação por Faixa Etária":
-    st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
-    st.subheader('Comparação por Faixa Etária - incidências a 14 dias')
+    absolute = st.checkbox('Mostrar valores absolutos em 14 dias')
 
-    col1, col2, col3, col4 = st.columns(4)
-    col1.subheader('**Mais de 80**')
-    col1.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['80_plus'][-1])), \
-                 str("{:,.1f}".format(incidencia_casos['80_plus'].diff()[-1])))
-    col1.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['80_plus'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['80_plus'].diff()[-1])))
+    if absolute:
+        st.subheader('Comparação por Faixa Etária - valores absolutos a 14 dias')
+        st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
 
-    col2.subheader('**60-79**')
-    col2.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['60_79'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['60_79'].diff()[-1])))
-    
-    col2.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['60_79'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['60_79'].diff()[-1])))
-    
-    with col2.expander("Desdobrar"):
-        st.subheader('**70-79**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['70_79'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['70_79'].diff()[-1]))) 
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['70_79'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['70_79'].diff()[-1])))
+        col1, col2, col3, col4 = st.columns(4)
+        col1.subheader('**Mais de 80**')
+        col1.metric('Casos: total',  str("{:,.0f}".format(casos['80_plus'][-1])), \
+                    str("{:,.0f}".format(casos['80_plus'].diff()[-1])))
+        col1.metric('Óbitos: total',  str("{:,.0f}".format(mortes['80_plus'][-1])), \
+                    str("{:,.0f}".format(mortes['80_plus'].diff()[-1])))
 
-        st.subheader('**60-69**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['60_69'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['60_69'].diff()[-1])))
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['60_69'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['60_69'].diff()[-1])))
+
+        col2.subheader('**60-79**')
+        col2.metric('Casos: total',  str("{:,.0f}".format(casos['60_79'][-1])), \
+                    str("{:,.0f}".format(casos['60_79'].diff()[-1])))
         
-
-    col3.subheader('**40-59**')
-    col3.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['40_59'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['40_59'].diff()[-1])))
-
-    col3.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['40_59'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['40_59'].diff()[-1])))
-
-    with col3.expander("Desdobrar"):
-        st.subheader('**50-59**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['50_59'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['50_59'].diff()[-1])))
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['50_59'][-1])), \
-                    str("{:,.1f}".format(incidencia_mortes['50_59'].diff()[-1])))
-
-        st.subheader('**40-49**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['40_49'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['40_49'].diff()[-1])))
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['40_49'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['40_49'].diff()[-1])))
-
+        col2.metric('Óbitos: total',  str("{:,.0f}".format(mortes['60_79'][-1])), \
+                    str("{:,.0f}".format(mortes['60_79'].diff()[-1])))
         
-    col4.subheader('**Menos de 40**')
-    col4.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['less_40'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['less_40'].diff()[-1])))
-    col4.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['less_40'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['less_40'].diff()[-1])))
+        with col2.expander("Desdobrar"):
+            st.subheader('**70-79**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['70_79'][-1])), \
+                    str("{:,.0f}".format(casos['70_79'].diff()[-1]))) 
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['70_79'][-1])), \
+                    str("{:,.0f}".format(mortes['70_79'].diff()[-1])))
 
-    with col4.expander("Desdobrar"):
-        st.subheader('**30-39**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['30_39'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['30_39'].diff()[-1])))
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['30_39'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['30_39'].diff()[-1])))
+            st.subheader('**60-69**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['60_69'][-1])), \
+                    str("{:,.0f}".format(casos['60_69'].diff()[-1])))
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['60_69'][-1])), \
+                    str("{:,.0f}".format(mortes['60_69'].diff()[-1])))
+            
 
-        st.subheader('**20-29**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['20_29'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['20_29'].diff()[-1])))
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['20_29'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['20_29'].diff()[-1])))
+        col3.subheader('**40-59**')
+        col3.metric('Casos: total',  str("{:,.0f}".format(casos['40_59'][-1])), \
+                    str("{:,.0f}".format(casos['40_59'].diff()[-1])))
 
-        st.subheader('**10-19**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['10_19'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['10_19'].diff()[-1])))
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['10_19'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['10_19'].diff()[-1])))
+        col3.metric('Óbitos: total',  str("{:,.0f}".format(mortes['40_59'][-1])), \
+                    str("{:,.0f}".format(mortes['40_59'].diff()[-1])))
 
-        st.subheader('**0-9**')
-        st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['0_9'][-1])), \
-                str("{:,.1f}".format(incidencia_casos['0_9'].diff()[-1])))
-        st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['0_9'][-1])), \
-                str("{:,.1f}".format(incidencia_mortes['0_9'].diff()[-1])))
+        with col3.expander("Desdobrar"):
+            st.subheader('**50-59**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['50_59'][-1])), \
+                    str("{:,.0f}".format(casos['50_59'].diff()[-1])))
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['50_59'][-1])), \
+                        str("{:,.0f}".format(mortes['50_59'].diff()[-1])))
+
+            st.subheader('**40-49**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['40_49'][-1])), \
+                    str("{:,.0f}".format(casos['40_49'].diff()[-1])))
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['40_49'][-1])), \
+                    str("{:,.0f}".format(mortes['40_49'].diff()[-1])))
+
+            
+        col4.subheader('**Menos de 40**')
+        col4.metric('Casos: total',  str("{:,.0f}".format(casos['less_40'][-1])), \
+                    str("{:,.0f}".format(casos['less_40'].diff()[-1])))
+        col4.metric('Óbitos: total',  str("{:,.0f}".format(mortes['less_40'][-1])), \
+                    str("{:,.0f}".format(mortes['less_40'].diff()[-1])))
+
+        with col4.expander("Desdobrar"):
+            st.subheader('**30-39**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['30_39'][-1])), \
+                    str("{:,.0f}".format(casos['30_39'].diff()[-1])))
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['30_39'][-1])), \
+                    str("{:,.0f}".format(mortes['30_39'].diff()[-1])))
+
+            st.subheader('**20-29**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['20_29'][-1])), \
+                    str("{:,.0f}".format(casos['20_29'].diff()[-1])))
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['20_29'][-1])), \
+                    str("{:,.0f}".format(mortes['20_29'].diff()[-1])))
+
+            st.subheader('**10-19**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['10_19'][-1])), \
+                    str("{:,.0f}".format(casos['10_19'].diff()[-1])))
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['10_19'][-1])), \
+                    str("{:,.0f}".format(mortes['10_19'].diff()[-1])))
+
+            st.subheader('**0-9**')
+            st.metric('Casos: total',  str("{:,.0f}".format(casos['0_9'][-1])), \
+                    str("{:,.0f}".format(casos['0_9'].diff()[-1])))
+            st.metric('Óbitos: total',  str("{:,.0f}".format(mortes['0_9'][-1])), \
+                    str("{:,.0f}".format(mortes['0_9'].diff()[-1])))
+        
+    else:
+        st.subheader('Comparação por Faixa Etária - incidências a 14 dias')
+        st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
+
+        col1, col2, col3, col4 = st.columns(4)
+        col1.subheader('**Mais de 80**')
+        col1.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['80_plus'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['80_plus'].diff()[-1])))
+        col1.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['80_plus'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['80_plus'].diff()[-1])))
+
+
+        col2.subheader('**60-79**')
+        col2.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['60_79'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['60_79'].diff()[-1])))
+        
+        col2.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['60_79'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['60_79'].diff()[-1])))
+        
+        with col2.expander("Desdobrar"):
+            st.subheader('**70-79**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['70_79'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['70_79'].diff()[-1]))) 
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['70_79'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['70_79'].diff()[-1])))
+
+            st.subheader('**60-69**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['60_69'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['60_69'].diff()[-1])))
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['60_69'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['60_69'].diff()[-1])))
+            
+
+        col3.subheader('**40-59**')
+        col3.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['40_59'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['40_59'].diff()[-1])))
+
+        col3.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['40_59'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['40_59'].diff()[-1])))
+
+        with col3.expander("Desdobrar"):
+            st.subheader('**50-59**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['50_59'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['50_59'].diff()[-1])))
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['50_59'][-1])), \
+                        str("{:,.1f}".format(incidencia_mortes['50_59'].diff()[-1])))
+
+            st.subheader('**40-49**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['40_49'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['40_49'].diff()[-1])))
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['40_49'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['40_49'].diff()[-1])))
+
+            
+        col4.subheader('**Menos de 40**')
+        col4.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['less_40'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['less_40'].diff()[-1])))
+        col4.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['less_40'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['less_40'].diff()[-1])))
+
+        with col4.expander("Desdobrar"):
+            st.subheader('**30-39**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['30_39'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['30_39'].diff()[-1])))
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['30_39'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['30_39'].diff()[-1])))
+
+            st.subheader('**20-29**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['20_29'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['20_29'].diff()[-1])))
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['20_29'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['20_29'].diff()[-1])))
+
+            st.subheader('**10-19**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['10_19'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['10_19'].diff()[-1])))
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['10_19'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['10_19'].diff()[-1])))
+
+            st.subheader('**0-9**')
+            st.metric('Casos: incidência',  str("{:,.1f}".format(incidencia_casos['0_9'][-1])), \
+                    str("{:,.1f}".format(incidencia_casos['0_9'].diff()[-1])))
+            st.metric('Óbitos: incidência',  str("{:,.1f}".format(incidencia_mortes['0_9'][-1])), \
+                    str("{:,.1f}".format(incidencia_mortes['0_9'].diff()[-1])))
     
 
     st.subheader('Comparação por Faixa Etária - números totais')
@@ -605,10 +694,8 @@ if add_selectbox == "Comparação por Faixa Etária":
 
 
 if add_selectbox == "Gráficos":
-    st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
-
-
     st.subheader("Hospitalizações vs Incidência a 14 dias")
+    st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
     ticks_incidencia = []
     for j in range(0,df_portugal_all['incidencia_14d'].dropna().astype(int).max(),500):
@@ -626,7 +713,7 @@ if add_selectbox == "Gráficos":
          'type': 'quantitative', 'title': 'Incidência 14 dias'},
          'y': {'field': 'internados', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados'},
          #'size': {'field': 'c', 'type': 'quantitative'},
-         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "darkcyan"]}},
                 "tooltip": [
       {"field": "month_year", "type": "temporal", "title": "Data"},
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
@@ -640,6 +727,7 @@ if add_selectbox == "Gráficos":
  })
 
     st.subheader("Hospitalizações UCI vs Incidência a 14 dias")
+    st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
     st.vega_lite_chart(df_portugal_all, {
      'width': 800,
@@ -651,7 +739,7 @@ if add_selectbox == "Gráficos":
         "axis": {"labelAngle": 0,"values": ticks_incidencia, "labelOverlap": "parity"}, 'title': 'Incidência 14 dias'},
          'y': {'field': 'internados_uci', 'type': 'quantitative', 'title': 'Numero de pacientes hospitalizados em UCI'},
          #'size': {'field': 'c', 'type': 'quantitative'},
-         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "darkcyan"]}},
                 "tooltip": [
       {"field": "month_year", "type": "temporal", "title": "Data"},
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
@@ -665,6 +753,7 @@ if add_selectbox == "Gráficos":
  })
 
     st.subheader("Positividade 14 dias vs Incidência a 14 dias")
+    st.caption("Atualizado em: "+ testes.index[-1].strftime('%d/%m/%Y'))
 
     st.vega_lite_chart(testes, {
      'width': 800,
@@ -677,7 +766,7 @@ if add_selectbox == "Gráficos":
         
          'y': {'field': 'positividade_mm14d', "format": ".1f", 'type': 'quantitative', 'title': 'Positividade 14 dias'},
          #'size': {'field': 'c', 'type': 'quantitative'},
-         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "darkcyan"]}},
                 "tooltip": [
       {"field": "month_year", "type": "temporal", "title": "Data"},
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
@@ -691,6 +780,7 @@ if add_selectbox == "Gráficos":
  })
 
     st.subheader("Matriz de Risco (últimos 90 dias)")
+    st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
     st.vega_lite_chart(df_portugal_all.tail(90), {
      'width': 800,
@@ -700,9 +790,9 @@ if add_selectbox == "Gráficos":
      'encoding': {
          'x': {'field': 'Rt_smooth', "format": ".2f", 'type': 'quantitative', 
         "axis": {"labelAngle": 0, "labelOverlap": "parity"}, 'title': 'Rt estimado'},
-         'y': {'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 'title': 'Incidência 14 dias'},
+         'y': {'gridColor': 'black', 'field': 'incidencia_14d', "format": ".1f", 'type': 'quantitative', 'title': 'Incidência 14 dias'},
          #'size': {'field': 'c', 'type': 'quantitative'},
-         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "black"]}},
+         'color': {'field': 'month_year', 'type': 'temporal', "scale": {"range": ["lightgray", "darkcyan"]}},
         "tooltip": [
       {"field": "month_year", "type": "temporal", "title": "Data"},
       {"field": "incidencia_14d", "type": "quantitative", "title": "Incidência 14 dias", 'format':',.1f'},
