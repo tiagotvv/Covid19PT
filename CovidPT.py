@@ -513,7 +513,7 @@ if add_selectbox == "Comparação por Faixa Etária":
     absolute = st.checkbox('Mostrar valores absolutos em 14 dias')
 
     if absolute:
-        st.subheader('Comparação por Faixa Etária - valores absolutos a 14 dias')
+        st.subheader('Comparação por Faixa Etária - valores absolutos em 14 dias')
         st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
 
@@ -599,7 +599,7 @@ if add_selectbox == "Comparação por Faixa Etária":
                     str("{:,.0f}".format(mortes['0_9'].diff()[-1])))
         
     else:
-        st.subheader('Comparação por Faixa Etária - incidências a 14 dias')
+        st.subheader('Comparação por Faixa Etária - incidências em 14 dias')
         st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
         col1, col2, col3, col4 = st.columns(4)
@@ -694,7 +694,7 @@ if add_selectbox == "Comparação por Faixa Etária":
 
 
 if add_selectbox == "Gráficos":
-    st.subheader("Hospitalizações vs Incidência a 14 dias")
+    st.subheader("Hospitalizações vs Incidência em 14 dias")
     st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
     ticks_incidencia = []
@@ -726,7 +726,7 @@ if add_selectbox == "Gráficos":
   },
  })
 
-    st.subheader("Hospitalizações UCI vs Incidência a 14 dias")
+    st.subheader("Hospitalizações UCI vs Incidência em 14 dias")
     st.caption("Atualizado em: "+ df_portugal_all.index[-1].strftime('%d/%m/%Y'))
 
     st.vega_lite_chart(df_portugal_all, {
@@ -752,7 +752,7 @@ if add_selectbox == "Gráficos":
   },
  })
 
-    st.subheader("Positividade 14 dias vs Incidência a 14 dias")
+    st.subheader("Positividade em 14 dias vs Incidência em 14 dias")
     st.caption("Atualizado em: "+ testes.index[-1].strftime('%d/%m/%Y'))
 
     st.vega_lite_chart(testes, {
