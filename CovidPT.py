@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 st.header('COVID-19 Dashboard Portugal')
 #st.caption('Atualizado em 15/1/2022')
 #DATA_URL = ('./deputados.csv')
-CASOS_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/dados_diarios.csv')
+CASOS_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv')
 TESTES_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/amostras.csv')
 VAXX_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/vacinas_detalhe.csv')
 
@@ -26,7 +26,9 @@ data_load_state.text('Loading data... done!')
 
 df_portugal_all = df_portugal.copy()
 testes = amostras.copy()
+testes = testes.head(745)  ## capping date 11/3/2022 - DGS started weekly reports
 df_portugal_all['data'] = pd.to_datetime(df_portugal_all['data'], format='%d-%m-%Y')
+df_portugal_all = df_portugal_all.head(745)  ## capping date 11/3/2022 - DGS started weekly reports
 df_portugal_all['weekday'] = ((df_portugal_all['data'].dt.dayofweek)).astype('category')
 df_portugal_all['month_year'] = df_portugal_all['data']#.dt.to_period('M')
 #st.write(df_portugal_all.columns.values)
@@ -853,7 +855,7 @@ if add_selectbox == "Gráficos":
   },
  })
 
-
+st.caption('O dashboard deixou de ser atualizado no dia 11/3 depois que a DGS encerrou a publicação dos boletins diários detalhados.')
 st.caption('Fonte dos dados: Data Science for Social Good Portugal - ' + 'https://github.com/dssg-pt/covid19pt-data')
 st.caption('Autor: Tiago T. V. Vinhoza: ' + 'https://twitter.com/tiagotvv')
 
