@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 st.header('COVID-19 Dashboard Portugal')
 #st.caption('Atualizado em 15/1/2022')
 #DATA_URL = ('./deputados.csv')
-CASOS_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv')
+CASOS_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/dados_diarios.csv')
 TESTES_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/amostras.csv')
 VAXX_URL = ('https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/vacinas_detalhe.csv')
 
