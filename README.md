@@ -1,6 +1,6 @@
 # Covid19PT
 
-Link to streamlit app: https://share.streamlit.io/tiagotvv/covid19pt/main/CovidPT.py
+Link to streamlit app: (https://covid19pt.streamlit.app/)
 
 ## Dashboard para dados da Covid-19 em Portugal
 
